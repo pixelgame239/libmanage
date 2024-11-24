@@ -1,0 +1,19 @@
+{
+  "genres": [
+    {
+      "genre_id": 1,
+      "genre_name": "Romance"
+    }
+    ,
+    {
+      "genre_id": 2,
+      "genre_name": "Action"
+    }
+  ],
+  "book_list": [
+    {
+    "genre_id": "1",
+      "book" : ""
+    }
+  ]
+}
