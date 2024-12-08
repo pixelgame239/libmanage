@@ -52,18 +52,18 @@ class _PdfViewScreenState extends State<PdfViewScreen> {
         if(didPop){
           return;
         }
-        await supabase.rpc('update_book_status', params: {
-        'id': currentUser.user_id,
-        'book_id': widget.readbook.book_id,
-        'new_status': widget.readbook.status
-        });
         result = widget.readbook.status;
         Navigator.pop(context,result);
         },
       child: Scaffold(
         appBar: AppBar(
           title: Text(widget.readbook.book_name, style: ScreenWidget().titlestyle),
-          leading: IconButton(onPressed: (){
+          leading: IconButton(onPressed: () async{
+            await supabase.rpc('update_book_status', params: {
+            'id': currentUser.user_id,
+            'book_id': widget.readbook.book_id,
+            'new_status': widget.readbook.status
+            });
             Navigator.maybePop(context, widget.readbook.status);
           }, icon: const Icon(Icons.arrow_back)),
         ),
