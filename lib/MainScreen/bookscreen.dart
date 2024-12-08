@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:librarymanage/Elements/booknames.dart';
+import 'package:librarymanage/Elements/userinformation.dart';
 import 'package:librarymanage/MainScreen/AddBookScreen.dart';
 import 'package:librarymanage/MainScreen/EditBook.dart';
 import 'package:librarymanage/MainScreen/detailbook_screen.dart';
 // import 'package:librarymanage/MainScreen/pdf_screen.dart';
 import 'package:librarymanage/MainScreen/screenElements.dart';
 import 'package:librarymanage/main.dart';
+import 'package:provider/provider.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 // import 'package:provider/provider.dart';
 // import 'package:http/http.dart' as http;
 // import 'package:supabase_flutter/supabase_flutter.dart';
@@ -13,10 +16,10 @@ import 'package:librarymanage/main.dart';
 
 class Bookscreen extends StatefulWidget {
   final String screenType; 
-  final int numbBooks;
+  int numbBooks;
   final List<Books> listBooks;
 
-  const Bookscreen({Key? key, required this.screenType, required this.numbBooks, required this.listBooks}) : super(key: key);
+  Bookscreen({Key? key, required this.screenType, required this.numbBooks, required this.listBooks}) : super(key: key);
 
   @override
   State<Bookscreen> createState() => _BookscreenState();
@@ -27,6 +30,51 @@ class _BookscreenState extends State<Bookscreen> {
   // void initState() {
   //   super.initState();
   // }
+   Future<void> _fetchAllbooks() async {
+    try{
+      final PostgrestResponse<PostgrestList> allbooks;
+      List<String> userbooks = [];
+      Books temp_book;
+      var userBookResponse;
+        userBookResponse = await supabase.from('user_accounts').select('book_list').eq('user_id', Provider.of<Users>(context,listen: false).user_id).single();
+        if(userBookResponse['book_list'] !=null){
+          for(var book in userBookResponse['book_list']){
+          userbooks.add(book['book_id']);
+        }
+        }
+        allbooks = await supabase.from('books').select().count();
+        widget.listBooks.clear();
+    for (var book in allbooks.data){
+      var bookGenres=await supabase.from('book_genres').select('genre_name').eq('book_id', book['book_id']);
+      List<String> addGenrescase1=[];
+      for(var availableGenres in bookGenres){
+        addGenrescase1.add(availableGenres['genre_name']);
+      }
+        if(userbooks.contains(book['book_id'])){
+          for(var status in userBookResponse['book_list']){
+            if(book['book_id']==status['book_id']){
+              temp_book = Books(book['book_id'],book['book_names'], book['author_name'], status['status'], book['total_pages'], addGenrescase1);
+              widget.listBooks.add(temp_book);
+               break;
+            }
+          }
+        }
+        else{
+         temp_book = Books(book['book_id'],book['book_names'], book['author_name'], 0, book['total_pages'], addGenrescase1);
+        widget.listBooks.add(temp_book);
+        }
+      }
+      widget.numbBooks = widget.listBooks.length;
+       if (mounted){
+      setState(() {
+      });
+    }
+    } catch (error) {
+        if(mounted){
+         ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Error: $error')));
+      }
+    }
+    }
 
   String _importImage(String book_id) {
     try{
@@ -370,14 +418,10 @@ class _BookscreenState extends State<Bookscreen> {
                                   TextButton(
                                     onPressed: () async{
                                       await supabase.rpc('remove_from_all_users_booklist', params: {'book_id':curBook.book_id});
-                                      // widget.listBooks.clear();
-                                      // setState(() {
-                                      // });
                                       await supabase.from('books').delete().eq('book_id', curBook.book_id);
                                       await supabase.storage.from('pdf').remove(['${curBook.book_id}.pdf']);
                                       await supabase.storage.from('images').remove(['${curBook.book_id}.jpg']);
-                                      setState(() {
-                                      });
+                                      await _fetchAllbooks();
                                       // Perform the deletion logic here
                                       // For example, remove the book from the list or database
 
