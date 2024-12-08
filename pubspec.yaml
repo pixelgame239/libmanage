@@ -1,0 +1,31 @@
+name: librarymanage
+description: "A new Flutter project."
+publish_to: 'none'
+version: 0.1.0
+
+environment:
+  sdk: ^3.5.3
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  image_picker: ^1.1.2
+  provider: ^6.1.2
+  supabase_flutter: ^2.8.1
+  http: ^1.2.2
+  diacritic: ^0.1.6
+  syncfusion_flutter_pdfviewer: ^27.2.4
+  google_sign_in: ^6.2.2
+  syncfusion_flutter_pdf: ^27.2.5
+  file_picker: ^8.1.4
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
+  assets:
+  - assets/
