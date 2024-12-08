@@ -17,7 +17,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 class Bookscreen extends StatefulWidget {
   final String screenType; 
   int numbBooks;
-  final List<Books> listBooks;
+  List<Books> listBooks;
 
   Bookscreen({Key? key, required this.screenType, required this.numbBooks, required this.listBooks}) : super(key: key);
 
@@ -64,9 +64,9 @@ class _BookscreenState extends State<Bookscreen> {
         widget.listBooks.add(temp_book);
         }
       }
-      widget.numbBooks = widget.listBooks.length;
        if (mounted){
       setState(() {
+        widget.numbBooks = widget.listBooks.length;
         print('total ${widget.numbBooks}');
       });
     }
@@ -223,7 +223,7 @@ class _BookscreenState extends State<Bookscreen> {
                   mainAxisSpacing: 0, // Space between rows
                   childAspectRatio: 0.45, // Aspect ratio of each item (Card)
                 ),
-                itemCount: widget.numbBooks + 1, // Number of books to display
+                itemCount: widget.listBooks.length + 1, // Number of books to display
                 itemBuilder: (context, index) {
                   if (index == 0) {
                     return _buildAddBookCard();
