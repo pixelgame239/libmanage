@@ -331,7 +331,7 @@ class _BookscreenState extends State<Bookscreen> {
       child: InkWell(
         onTap: () async{
           String image_url = _importImage(curBook.book_id);
-          Navigator.push(context, MaterialPageRoute(builder: (context)=> Detailbook(detailBook: curBook, importImage: image_url,)));
+          Navigator.push(context, MaterialPageRoute(builder: (context)=> Detailbook(detailBook: curBook, importImage: [image_url],)));
         },
         child: Card(
           elevation: 3,
