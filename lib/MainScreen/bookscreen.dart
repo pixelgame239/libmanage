@@ -67,6 +67,7 @@ class _BookscreenState extends State<Bookscreen> {
       widget.numbBooks = widget.listBooks.length;
        if (mounted){
       setState(() {
+        print('total ${widget.numbBooks}');
       });
     }
     } catch (error) {
@@ -95,7 +96,6 @@ class _BookscreenState extends State<Bookscreen> {
 
   @override
   Widget build(BuildContext context) {
-    var displayBooks = widget.listBooks;
     return Scaffold(
       body: Column(
         children: [
@@ -228,7 +228,7 @@ class _BookscreenState extends State<Bookscreen> {
                   if (index == 0) {
                     return _buildAddBookCard();
                   } else {
-                    Books temp_book = displayBooks[index-1]; // Fetch current book
+                    Books temp_book = widget.listBooks[index-1]; // Fetch current book
                     return _buildBookCard(temp_book, widget.screenType);
                   } // Use the card builder for each book
                 },
@@ -253,7 +253,7 @@ class _BookscreenState extends State<Bookscreen> {
                 ),
                 itemCount: widget.numbBooks,
                 itemBuilder: (context, index) {
-                  Books temp_book = displayBooks[index];
+                  Books temp_book = widget.listBooks[index];
                   return _buildBookCard(temp_book, widget.screenType);
                 },
               ),
@@ -273,7 +273,7 @@ class _BookscreenState extends State<Bookscreen> {
                 ),
                 itemCount: widget.numbBooks,
                 itemBuilder: (context, index) {
-                  Books temp_book = displayBooks[index];
+                  Books temp_book = widget.listBooks[index];
                   return _buildBookCard(temp_book, widget.screenType);
                 },
               ),
