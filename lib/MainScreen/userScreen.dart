@@ -41,8 +41,8 @@ class _HomeScreenState extends State<HomeScreen> {
   Future<void> _signOut() async{
     try {
       await supabase.removeAllChannels();
-      await supabase.auth.signOut();
       context.read<Genres>().resetGenres();
+      await supabase.auth.signOut();
     } on AuthException catch (error) {
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text(error.message)));
     } catch (error) {
@@ -346,7 +346,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                 shape: const Border(
                                     bottom: BorderSide(
                                         width: 1, color: Colors.black54)),
-                                trailing: OverflowBox(
+                                trailing: currentUser.auth
+                                ? OverflowBox(
                                   maxWidth: 30,
                                   maxHeight: 50,
                                   fit: OverflowBoxFit.deferToChild,
@@ -385,6 +386,10 @@ class _HomeScreenState extends State<HomeScreen> {
                                       ];
                                     },
                                   ),
+                                )
+                                : Container(
+                                  width: 0,
+                                  height: 0,
                                 ),
                                 onTap: () async {
                                   ScreenWidget.close_drawer(_mainscreenkey);
